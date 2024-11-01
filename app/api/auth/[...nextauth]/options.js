@@ -1,5 +1,5 @@
-import GithubProvider from './next-auth/providers/github';
-import GoogleProvider from './next-auth/providers/google';
+import GithubProvider from 'next-auth/providers/github';
+import GoogleProvider from 'next-auth/providers/google';
 
 export const options = {
   providers: [
@@ -26,6 +26,7 @@ export const options = {
         token.id = user.id;
         token.role = user.role;
       }
+      return token;
     },
     async session({ session, token }) {
       session.id = token.id;

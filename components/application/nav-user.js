@@ -1,6 +1,5 @@
 'use client';
-
-import { useUser, useClerk } from '@clerk/nextjs';
+import { Suspense } from 'react';
 import {
   BadgeCheck,
   Bell,
@@ -25,23 +24,37 @@ import {
   SidebarMenuItem,
   useSidebar,
 } from '@/components/ui/sidebar';
+import { useSession, signOut } from 'next-auth/react';
+import { redirect } from 'next/navigation';
 
 export function NavUser() {
-  const { user } = useUser();
-  const { signOut } = useClerk();
+  const { data: session, status } = useSession({
+    required: true,
+    onUnauthenticated() {
+      redirect('api/auth/signin?callbacklUrl=/home');
+    },
+  });
   const { isMobile } = useSidebar();
 
-  if (!user) return null;
+  if (status === 'loading') {
+    return null;
+  }
+
+  if (!session) {
+    return null;
+  }
 
   // Get user initials for avatar fallback
-  const initials =
-    user.firstName && user.lastName
-      ? `${user.firstName[0]}${user.lastName[0]}`
-      : user.emailAddresses[0]?.emailAddress?.substring(0, 2).toUpperCase() ||
-        '??';
+  const initials = session.user.name
+    ? session.user.name
+        .split(' ')
+        .map((n) => n[0])
+        .join('')
+        .toUpperCase()
+    : '??';
 
-  const handleSignOut = () => {
-    signOut();
+  const handleSignOut = async () => {
+    await signOut({ redirect: true, callbackUrl: '/' });
   };
 
   return (
@@ -55,8 +68,8 @@ export function NavUser() {
             >
               <Avatar className="h-8 w-8 rounded-lg">
                 <AvatarImage
-                  src={user.imageUrl}
-                  alt={user.fullName || user.username || ''}
+                  src={session.user.image}
+                  alt={session.user.name || session.user.email || ''}
                 />
                 <AvatarFallback className="rounded-lg">
                   {initials}
@@ -64,11 +77,9 @@ export function NavUser() {
               </Avatar>
               <div className="grid flex-1 text-left text-sm leading-tight">
                 <span className="truncate font-semibold">
-                  {user.fullName || user.username}
+                  {session.user.name || session.user.email}
                 </span>
-                <span className="truncate text-xs">
-                  {user.primaryEmailAddress?.emailAddress}
-                </span>
+                <span className="truncate text-xs">{session.user.email}</span>
               </div>
               <ChevronsUpDown className="ml-auto size-4" />
             </SidebarMenuButton>
@@ -83,8 +94,8 @@ export function NavUser() {
               <div className="flex items-center gap-2 px-1 py-1.5 text-left text-sm">
                 <Avatar className="h-8 w-8 rounded-lg">
                   <AvatarImage
-                    src={user.imageUrl}
-                    alt={user.fullName || user.username || ''}
+                    src={session.user.image}
+                    alt={session.user.name || session.user.email || ''}
                   />
                   <AvatarFallback className="rounded-lg">
                     {initials}
@@ -92,11 +103,9 @@ export function NavUser() {
                 </Avatar>
                 <div className="grid flex-1 text-left text-sm leading-tight">
                   <span className="truncate font-semibold">
-                    {user.fullName || user.username}
+                    {session.user.name || session.user.email}
                   </span>
-                  <span className="truncate text-xs">
-                    {user.primaryEmailAddress?.emailAddress}
-                  </span>
+                  <span className="truncate text-xs">{session.user.email}</span>
                 </div>
               </div>
             </DropdownMenuLabel>
