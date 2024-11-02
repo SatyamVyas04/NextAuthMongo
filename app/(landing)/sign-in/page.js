@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { loginWithCreds } from '@/actions/auth';
+import { loginWithCreds, login } from '@/actions/auth';
 import { useRouter } from 'next/navigation';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -48,7 +48,7 @@ export default function SignIn() {
       <div className="relative w-full max-w-md px-4">
         <div className="absolute inset-0 -z-10 h-full w-full rounded-3xl bg-white/30 shadow-xl shadow-secondary/10 backdrop-blur-2xl" />
 
-        <Card className="border-none bg-transparent">
+        <Card className="border-none bg-transparent shadow-xl">
           <CardHeader className="space-y-4">
             <CardTitle className="text-center text-3xl font-bold tracking-tight">
               Welcome back
@@ -83,18 +83,9 @@ export default function SignIn() {
               </div>
 
               <div className="space-y-2">
-                <div className="flex justify-between">
-                  <Label htmlFor="password" className="text-sm font-medium">
-                    Password
-                  </Label>
-                  <Button
-                    variant="link"
-                    className="px-0 text-sm font-medium text-primary"
-                    onClick={() => router.push('/')}
-                  >
-                    Forgot password?
-                  </Button>
-                </div>
+                <Label htmlFor="password" className="text-sm font-medium">
+                  Password
+                </Label>
                 <Input
                   id="password"
                   type="password"
@@ -138,7 +129,7 @@ export default function SignIn() {
             <div className="grid grid-cols-2 gap-4">
               <Button
                 variant="outline"
-                onClick={() => loginWithCreds('github')}
+                onClick={() => login('github')}
                 className="h-11 hover:bg-secondary/80"
               >
                 <LucideGithub className="mr-2 h-5 w-5" />
@@ -146,7 +137,7 @@ export default function SignIn() {
               </Button>
               <Button
                 variant="outline"
-                onClick={() => loginWithCreds('google')}
+                onClick={() => login('google')}
                 className="h-11 hover:bg-secondary/80"
               >
                 <Mail className="mr-2 h-5 w-5" />
