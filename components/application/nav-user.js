@@ -31,7 +31,7 @@ export function NavUser() {
   const { data: session, status } = useSession({
     required: true,
     onUnauthenticated() {
-      redirect('api/auth/signin?callbacklUrl=/home');
+      redirect('/sign-in');
     },
   });
   const { isMobile } = useSidebar();

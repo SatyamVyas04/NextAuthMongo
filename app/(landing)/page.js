@@ -53,12 +53,12 @@ const LandingPage = () => {
             >
               For Employees
             </Link>
-            <Link href="/api/auth/signin">
+            <Link href="/sign-in">
               <Button variant="outline" className="ml-4">
                 Sign In
               </Button>
             </Link>
-            <Link href="/api/auth/signup">
+            <Link href="/sign-in">
               <Button>Get Started</Button>
             </Link>
           </div>
