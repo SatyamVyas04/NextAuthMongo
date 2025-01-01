@@ -32,7 +32,7 @@ export const loginWithCreds = async (formData) => {
   };
 
   const existingUser = await getUserByEmail({ email: rawFormData.email });
-  console.log(existingUser);
+  
 
   try {
     const user = await signIn('credentials', rawFormData);
